@@ -1,9 +1,10 @@
 import random
 import gym
 import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.optimizers import Adam
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers  import Dense
+from tensorflow.keras.optimizers import Adam
 
 
 BATCH_SIZE = 10
@@ -37,13 +38,14 @@ def replay(model, memory, explo_ratio):
         q_values = model.predict(state)
         q_values[0][action] = q_update
         model.fit(state, q_values, verbose=0)
-        explo_ratio = explo_ratio * 0.95
+        explo_ratio = explo_ratio * 0.995
         explo_ratio = max(explo_ratio, 0.05)
     return explo_ratio, model
 
 
 if __name__ == "__main__":
-    env = gym.make("CartPole-v1")
+    tf.compat.v1.disable_eager_execution()
+    env = gym.make("CartPole-v0")
     observation_space = env.observation_space.shape[0]
     action_space = env.action_space.n
     model = create_model(observation_space, action_space)
@@ -78,4 +80,12 @@ if __name__ == "__main__":
                 break
             explo_ratio, model = replay(model, memory, explo_ratio)
 
-
+if __name__ == "__main__":
+    env = gym.make('CartPole-v0')
+    env.reset()
+    for i in range(1000):
+        env.render()
+        state_next, reward, done, info = env.step(env.action_space.sample())  # take a random action
+        if done == True:
+            env.reset()
+    env.close()
