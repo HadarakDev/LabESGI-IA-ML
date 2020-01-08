@@ -1,6 +1,7 @@
 import pygame
 from config import *
 import numpy as np
+import random
 
 def display_board(win, item_map_edit):
     mouse_img = pygame.image.load("mouse.png").convert_alpha()
@@ -38,15 +39,15 @@ def  create_Q_table():  # create q table with zeros and size
 
 def choose_random(item_map_edit, x, y):
     x, y = np.where(item_map_edit == "M")
-    while (True)
+    while (True):
         action = random.choice(action_list)
         if  action == "R" and x + 1 < 3:
             return "R"     
-        else if action  == "L" and x - 1 > 0:
-           return "L" 
-        else if action == "T" and y - 1 > 0:
+        elif action  == "L" and x - 1 > 0:
+            return "L"
+        elif action == "T" and y - 1 > 0:
             return "T"
-        else if action == "B" and y + 1 < 3:
+        elif action == "B" and y + 1 < 3:
             return "B"
 
 
