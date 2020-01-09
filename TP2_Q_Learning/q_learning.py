@@ -4,8 +4,8 @@ import pygame
 import numpy as np
 import random
 
-from TP2_Q_Learning.config import score_map, item_map, actions, position_map, action_text
-from TP2_Q_Learning.fix_me import *
+from config import score_map, item_map, actions, position_map, action_text
+from fix_me import *
 
 #### GRAPHICAL PYGAME FUNCTION
 def display_board(win, item_map_edit, posX, posY, background_img):
@@ -54,7 +54,7 @@ def display_info(x, y, q_table, r, epochs, action, epsilon):
     w = 1000
     for i in range(0, q_table.shape[0]):
         for j in range(0, q_table.shape[1]):
-            rd = font.render("{:.4f}".format(q_table[i][j]), True, (255, 255, 255))
+            rd = font.render("{:.3f}".format(q_table[i][j]), True, (255, 255, 255))
             win.blit(rd, (w, h))
             w += 70
         h += 30
@@ -147,4 +147,6 @@ if __name__ == "__main__":
 
             # Uncomment to wait after each action
             #sleep(0.5)
+            # if epochs % 20 == 0:
+            #     sleep(0.3)
 
