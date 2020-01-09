@@ -22,6 +22,6 @@ def choose_action(state, q_table, epsilon):
     return action
 
 def reduce_epsilon(epsilon):
-    epsilon = epsilon * 0.9995  # reduce epsilon after each step
-    epsilon = max(epsilon, 0.15) # set a minimum value for epsilon
+    epsilon = epsilon * 0.995  # reduce epsilon after each step
+    epsilon = max(epsilon, 0.1) # set a minimum value for epsilon
     return epsilon
