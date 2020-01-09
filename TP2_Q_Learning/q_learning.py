@@ -4,8 +4,8 @@ import pygame
 import numpy as np
 import random
 
-from TP2_Q_Learning.config import score_map, item_map, actions, position_map, action_text
-from TP2_Q_Learning.fix_me import *
+from config import score_map, item_map, actions, position_map, action_text
+from fix_me import *
 
 #### GRAPHICAL PYGAME FUNCTION
 def display_board(win, item_map_edit, posX, posY, background_img):
