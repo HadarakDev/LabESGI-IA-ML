@@ -4,8 +4,8 @@ import pygame
 import numpy as np
 import random
 
-from TP2_Q_Learning.config import score_map, item_map, actions, position_map, action_text
-from TP2_Q_Learning.fix_me import *
+from config import score_map, item_map, actions, position_map, action_text
+from fix_me import *
 
 #### GRAPHICAL PYGAME FUNCTION
 def display_board(win, item_map_edit, posX, posY, background_img):
@@ -47,8 +47,6 @@ def display_info(x, y, q_table, r, epochs, action, epsilon):
     textEpsilon = font.render("Exploration Rate (epsilon): " + "{:.4f}".format(epsilon), True, (255, 255, 255), None)
     textAction = font.render("Action: " + action_text[action], True, (255, 255, 255), None)
     textReward = font.render("Reward: " + str(r), True, (255, 255, 255), None)
-
-
 
     h = 500
     w = 1000
@@ -94,6 +92,24 @@ def is_alive(score_map_edit, x, y):
         done = True
     return done
 
+def save_q_table(q_table):
+    f = open("q_table", "w")
+    for i in range(9):
+        for j in range(4):
+            f.write(str(q_table[i][j]))
+            f.write(";")
+    f.close()
+
+def load_q_table(q_table, path):
+    f = open(path, "r")
+    table = f.read()
+    k = 0
+    table = table.split(";")
+    for i in range(9):
+        for j in range(4):
+            q_table[i][j] = table[k]
+            k = k + 1
+    print(q_table)
 
 def step(action, x, y, score_map_edit, item_map_edit):
     reward = 0
@@ -107,18 +123,20 @@ def step(action, x, y, score_map_edit, item_map_edit):
         item_map_edit[y][x] = "0"
     return x, y, (y * 3 + x * 1), reward, done, score_map_edit
 
-if __name__ == "__main__":
-    ### pygame
-    pygame.init()
-    win = pygame.display.set_mode((1400, 900))
-    background_img = pygame.image.load("images/background_img.png").convert()
 
-    reward = 0
-    Gamma = 0.9  # next action impact
-    epsilon = 1  # exploration rate
+def play_q_table(q_table):
+    for epochs in range(100):
+        done = False
+        x, y, state, score_map_edit, item_map_edit = reset()
+        it = 15
+        while done == False:
+            display_board(win, item_map_edit, x, y, background_img)
+            event_loop()
+            action = choose_action(state, q_table, 0.0)
+            x, y, stateNext, reward, done, score_map_edit = step(action, x, y, score_map_edit, item_map_edit)
+            display_info(x, y, q_table, reward, epochs, action, 0.0)
 
-    q_table = create_Q_table()
-
+def train_q_table(q_table, epsilon, save):
     for epochs in range(100):
         done = False
         x, y, state, score_map_edit, item_map_edit = reset()
@@ -144,7 +162,28 @@ if __name__ == "__main__":
                 break
             epsilon = reduce_epsilon(epsilon)
             display_info(x, y, q_table, reward, epochs, action, epsilon)
+        if save == True:
+            save_q_table(q_table)
 
-            # Uncomment to wait after each action
-            #sleep(0.5)
+
+if __name__ == "__main__":
+    ### pygame
+    pygame.init()
+    win = pygame.display.set_mode((1400, 900))
+    background_img = pygame.image.load("images/background_img.png").convert()
+
+    reward = 0
+    Gamma = 0.8  # next action impact
+    epsilon = 1 # exploration rate
+
+    q_table = create_Q_table()
+
+    #uncomment to load an existing q_table
+    #load_q_table(q_table, "q_table")
+
+    # Uncomment to train or test(play) a q_table
+    train_q_table(q_table, epsilon, True)
+    #play_q_table(q_table)
+
+
 
