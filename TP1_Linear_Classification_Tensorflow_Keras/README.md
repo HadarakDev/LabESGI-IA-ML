@@ -1,1 +1,1 @@
-# Linear Regression On Zalando MNIST
+# Linear Classification On Zalando MNIST
